@@ -1,0 +1,19 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "overrides": [
+    {
+      "files": ["jest.config.js", "other.config.js"], // Specify config files or patterns
+      "rules": {
+        "no-undef": "off", // Turn off the 'no-undef' rule
+        "@typescript-eslint/no-var-requires": "off" // If using TypeScript, turn off no-var-requires rule
+      }
+    }
+  ]
+}
