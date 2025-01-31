@@ -1,0 +1,17 @@
+{
+  "name": "sst-next-mvp-template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "workspaces": [
+    "my-app",
+    "my-sst-app"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
