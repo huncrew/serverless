@@ -5,7 +5,9 @@ import axios from 'axios';
 import { dynamoDb } from '../../../../../common-utils/dynamoClient';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
-export const intercomCallbackHandler: APIGatewayProxyHandler = async (event) => {
+export const intercomCallbackHandler: APIGatewayProxyHandler = async (
+  event,
+) => {
   const code = event.queryStringParameters?.code;
   const state = event.queryStringParameters?.state;
   // You can validate the state parameter for security
@@ -22,11 +24,14 @@ export const intercomCallbackHandler: APIGatewayProxyHandler = async (event) => 
 
   try {
     // Exchange authorization code for access token
-    const tokenResponse = await axios.post('https://api.intercom.io/auth/eagle/token', {
-      client_id: process.env.INTERCOM_CLIENT_ID,
-      client_secret: process.env.INTERCOM_CLIENT_SECRET,
-      code: code,
-    });
+    const tokenResponse = await axios.post(
+      'https://api.intercom.io/auth/eagle/token',
+      {
+        client_id: process.env.INTERCOM_CLIENT_ID,
+        client_secret: process.env.INTERCOM_CLIENT_SECRET,
+        code: code,
+      },
+    );
 
     const accessToken = tokenResponse.data.access_token;
     const userId = event.headers['x-user-id'];

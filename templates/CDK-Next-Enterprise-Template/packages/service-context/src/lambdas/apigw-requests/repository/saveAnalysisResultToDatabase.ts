@@ -1,13 +1,17 @@
 import { dynamoDb } from '../../../../../common-utils/dynamoClient';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
-export const saveAnalysisResultToDatabase = async ({ jobId, userId, results }) => {
+export const saveAnalysisResultToDatabase = async ({
+  jobId,
+  userId,
+  results,
+}) => {
   const params = {
     TableName: 'ContextTable',
     Item: {
       PK: `USER#${userId}`, // Partition Key
-      SK: `JOB#${jobId}`,   // Sort Key
-      Results: results,     // Store the array of analysis results
+      SK: `JOB#${jobId}`, // Sort Key
+      Results: results, // Store the array of analysis results
       CreatedAt: new Date().toISOString(),
     },
   };

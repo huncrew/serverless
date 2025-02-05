@@ -3,11 +3,10 @@ import { dynamoDb } from '../../../../../common-utils/dynamoClient';
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 
 export const getLatestJobHandler: APIGatewayProxyHandler = async (event) => {
-  console.log('calling in latestJobHandler')
+  console.log('calling in latestJobHandler');
   const userId = event.headers['x-user-id'];
 
-
-  console.log('userId', userId)
+  console.log('userId', userId);
 
   try {
     const params = {
@@ -23,7 +22,7 @@ export const getLatestJobHandler: APIGatewayProxyHandler = async (event) => {
 
     const result = await dynamoDb.send(new QueryCommand(params));
 
-    console.log('result', result)
+    console.log('result', result);
 
     if (result.Items && result.Items.length > 0) {
       const latestJob = result.Items[0];

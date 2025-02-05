@@ -1,4 +1,10 @@
-import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult, ALBEvent, ALBResult } from 'aws-lambda';
+import {
+  APIGatewayProxyHandler,
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  ALBEvent,
+  ALBResult,
+} from 'aws-lambda';
 import middy from '@middy/core';
 import httpRouterHandler, { Route } from '@middy/http-router';
 import jsonBodyParser from '@middy/http-json-body-parser';
@@ -15,7 +21,10 @@ import { intercomCallbackHandler } from './handlers/intercomCallbackHandler';
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 // Define routes
-const routes: Route<APIGatewayProxyEvent | ALBEvent, APIGatewayProxyResult | ALBResult>[] = [
+const routes: Route<
+  APIGatewayProxyEvent | ALBEvent,
+  APIGatewayProxyResult | ALBResult
+>[] = [
   {
     method: 'GET',
     path: '/crypto',
@@ -49,6 +58,5 @@ const routes: Route<APIGatewayProxyEvent | ALBEvent, APIGatewayProxyResult | ALB
 ];
 
 // Apply middleware and router
-export const handler = middy()
-  .handler(httpRouterHandler(routes))
-  // .use(jsonBodyParser());
+export const handler = middy().handler(httpRouterHandler(routes));
+// .use(jsonBodyParser());

@@ -29,7 +29,8 @@ export const uploadCsvHandler: APIGatewayProxyHandler = async (event) => {
   const analysisResults = [];
 
   for (const record of records) {
-    const feedbackText = record.feedback || record.Feedback || record.comment || record.Comment;
+    const feedbackText =
+      record.feedback || record.Feedback || record.comment || record.Comment;
 
     if (!feedbackText) {
       console.warn('No feedback text found in record:', record);
@@ -40,11 +41,15 @@ export const uploadCsvHandler: APIGatewayProxyHandler = async (event) => {
     const functions = [
       {
         name: 'analyze_feedback',
-        description: 'Analyze customer feedback to determine sentiment, themes, and recommendations',
+        description:
+          'Analyze customer feedback to determine sentiment, themes, and recommendations',
         parameters: {
           type: 'object',
           properties: {
-            sentiment: { type: 'string', enum: ['Positive', 'Neutral', 'Negative'] },
+            sentiment: {
+              type: 'string',
+              enum: ['Positive', 'Neutral', 'Negative'],
+            },
             themes: { type: 'array', items: { type: 'string' } },
             recommendations: { type: 'array', items: { type: 'string' } },
           },
@@ -91,7 +96,11 @@ Feedback: "${feedbackText}"
   console.log('Analysis results:', analysisResults);
 
   // Store the results in your database
-  await saveAnalysisResultToDatabase({ jobId, userId, results: analysisResults });
+  await saveAnalysisResultToDatabase({
+    jobId,
+    userId,
+    results: analysisResults,
+  });
 
   return {
     statusCode: 202,

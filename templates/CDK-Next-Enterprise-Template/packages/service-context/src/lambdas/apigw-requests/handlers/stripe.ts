@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const stripeHandler = async (event) => {
   const { priceId } = event.body;
 
-  console.log('whats the price id?', priceId)
+  console.log('whats the price id?', priceId);
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -26,13 +26,12 @@ export const stripeHandler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({ clientSecret: session.client_secret }),
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*", // or specific origin
-        "Access-Control-Allow-Headers": "Content-Type",      
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*', // or specific origin
+        'Access-Control-Allow-Headers': 'Content-Type',
       },
     };
   } catch (err) {
-
     console.log('There is an error', err);
     return {
       statusCode: 500,

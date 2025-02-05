@@ -6,7 +6,9 @@ import { dynamoDb } from '../../../../../common-utils/dynamoClient';
 import { QueryCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 
-export const fetchIntercomDataHandler: APIGatewayProxyHandler = async (event) => {
+export const fetchIntercomDataHandler: APIGatewayProxyHandler = async (
+  event,
+) => {
   const userId = event.headers['x-user-id'];
 
   if (!userId) {
@@ -70,8 +72,8 @@ export const fetchIntercomDataHandler: APIGatewayProxyHandler = async (event) =>
       // For brevity, we'll assume you have a function analyzeFeedback
 
       const analyzeFeedback = (a) => {
-        return {}
-      }
+        return {};
+      };
       const analysisResult = await analyzeFeedback(feedbackText);
 
       analysisResults.push({
@@ -97,7 +99,9 @@ export const fetchIntercomDataHandler: APIGatewayProxyHandler = async (event) =>
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Intercom data fetched and analyzed successfully.' }),
+      body: JSON.stringify({
+        message: 'Intercom data fetched and analyzed successfully.',
+      }),
       headers: {
         'Content-Type': 'application/json',
       },

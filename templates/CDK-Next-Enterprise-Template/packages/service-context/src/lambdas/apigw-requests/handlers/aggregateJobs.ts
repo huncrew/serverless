@@ -2,13 +2,15 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import { dynamoDb } from '../../../../../common-utils/dynamoClient';
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 
-export const getAggregatedResultsHandler: APIGatewayProxyHandler = async (event) => {
+export const getAggregatedResultsHandler: APIGatewayProxyHandler = async (
+  event,
+) => {
   const userId = event.headers['x-user-id'];
   const queryParams = event.queryStringParameters || {};
   const startDate = queryParams.startDate;
   const endDate = queryParams.endDate;
 
-  console.log('calling in aggregated results')
+  console.log('calling in aggregated results');
 
   try {
     // Construct the DynamoDB query
@@ -41,7 +43,6 @@ export const getAggregatedResultsHandler: APIGatewayProxyHandler = async (event)
     const result = await dynamoDb.send(new QueryCommand(params));
 
     console.log('calling in aggregated DB ', result);
-
 
     const allResults = [];
 

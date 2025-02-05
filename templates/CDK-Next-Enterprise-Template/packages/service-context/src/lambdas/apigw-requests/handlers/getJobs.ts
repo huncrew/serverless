@@ -7,7 +7,7 @@ export const getJobsHandler: APIGatewayProxyHandler = async (event) => {
 
   const userId = event.headers['x-user-id'];
 
-  console.log('userId', userId)
+  console.log('userId', userId);
 
   if (!userId) {
     return {
@@ -28,23 +28,24 @@ export const getJobsHandler: APIGatewayProxyHandler = async (event) => {
   try {
     const data = await dynamoDb.send(new QueryCommand(params));
 
-    const jobs = data.Items?.map((item) => ({
-      jobId: item.SK.replace('JOB#', ''),
-      result: item.Results,
-      createdAt: item.CreatedAt,
-    })) || [];
+    const jobs =
+      data.Items?.map((item) => ({
+        jobId: item.SK.replace('JOB#', ''),
+        result: item.Results,
+        createdAt: item.CreatedAt,
+      })) || [];
 
-    console.log(jobs)
+    console.log(jobs);
 
-    console.log('job retrieval successful')
+    console.log('job retrieval successful');
 
     return {
       statusCode: 200,
       body: JSON.stringify(jobs),
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*", // or specific origin
-        "Access-Control-Allow-Headers": "Content-Type",      
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*', // or specific origin
+        'Access-Control-Allow-Headers': 'Content-Type',
       },
     };
   } catch (error) {
@@ -53,9 +54,9 @@ export const getJobsHandler: APIGatewayProxyHandler = async (event) => {
       statusCode: 500,
       body: JSON.stringify({ message: 'Failed to retrieve jobs' }),
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*", // or specific origin
-        "Access-Control-Allow-Headers": "Content-Type",      
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*', // or specific origin
+        'Access-Control-Allow-Headers': 'Content-Type',
       },
     };
   }

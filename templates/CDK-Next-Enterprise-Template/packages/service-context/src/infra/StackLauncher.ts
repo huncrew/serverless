@@ -12,7 +12,7 @@ const dataStack = new DataStack(app, 'ContextService-DataStack');
 
 new LambdaStack(app, 'ContextService-LambdaStack', {
   lambdaCodePath: lambdasPath,
-  projectContextTable: dataStack.projectContextTable
+  projectContextTable: dataStack.projectContextTable,
   // projectContextTable: dataStack.projectContextTable,
   // myQueue: queueStack.myQueue,
 });
