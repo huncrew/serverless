@@ -1,7 +1,7 @@
 // AuthStack.ts
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
+import { UserPool, UserPoolClient, OAuthScope } from 'aws-cdk-lib/aws-cognito';
 
 export class AuthStack extends Stack {
   public readonly userPool: UserPool;
@@ -29,7 +29,7 @@ export class AuthStack extends Stack {
       authFlows: { userPassword: true },
       oAuth: {
         flows: { authorizationCodeGrant: true },
-        scopes: ['email', 'openid'],
+        scopes: [OAuthScope.OPENID, OAuthScope.EMAIL],
         callbackUrls: ['http://localhost:3000/callback'],
       },
     });
