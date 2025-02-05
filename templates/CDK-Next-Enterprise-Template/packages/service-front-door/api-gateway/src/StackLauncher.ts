@@ -1,7 +1,6 @@
 // main.ts
 import { App, Fn } from 'aws-cdk-lib';
-import { AuthStack } from './AuthStack';
-import { TemplateFrontDoorStack } from './ApiStack';
+import { TemplateFrontDoorStack } from './TemplateFrontDoorStack';
 
 const app = new App();
 
