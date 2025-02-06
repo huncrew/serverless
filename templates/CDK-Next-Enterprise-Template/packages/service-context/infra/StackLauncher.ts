@@ -1,5 +1,5 @@
 import { App } from 'aws-cdk-lib';
-import { ServiceContextStack } from './stacks/contextServiceStack';
+import { ServiceContextStack } from './contextServiceStack';
 import config from '../envConstants';
 const app = new App();
 
