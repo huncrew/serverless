@@ -1,18 +1,12 @@
 import { App } from 'aws-cdk-lib';
-import { DataStack } from './stacks/DataStack';
-import { LambdaStack } from './stacks/LambdaStack';
-import { QueueStack } from './stacks/QueueStack';
-import * as path from 'path';
-
+import { ServiceContextStack } from './stacks/contextServiceStack';
+import config from '../envConstants';
 const app = new App();
-const lambdasPath = path.join(__dirname, '..', 'lambdas');
 
-// const queueStack = new QueueStack(app, 'ContextService-QueueStack');
-const dataStack = new DataStack(app, 'ContextService-DataStack');
-
-new LambdaStack(app, 'ContextService-LambdaStack', {
-  lambdaCodePath: lambdasPath,
-  projectContextTable: dataStack.projectContextTable,
-  // projectContextTable: dataStack.projectContextTable,
-  // myQueue: queueStack.myQueue,
+new ServiceContextStack(app, 'ServiceContextStack', {
+  STRIPE_SECRET_KEY: config.STRIPE_SECRET_KEY,
+  OPENAI_KEY: config.OPENAI_KEY,
+  COINMARKETCAP_API_KEY: config.COINMARKETCAP_API_KEY,
 });
+
+app.synth();
