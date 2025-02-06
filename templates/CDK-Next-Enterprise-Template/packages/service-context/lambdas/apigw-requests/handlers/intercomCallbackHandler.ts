@@ -2,7 +2,7 @@
 
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import axios from 'axios';
-import { dynamoDb } from '../../../../../common-utils/dynamoClient';
+import { dynamoDb } from '../../../../common-utils/dynamoClient';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
 export const intercomCallbackHandler: APIGatewayProxyHandler = async (

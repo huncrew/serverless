@@ -1,4 +1,4 @@
-import { dynamoDb } from '../../../../../common-utils/dynamoClient';
+import { dynamoDb } from '../../../../common-utils/dynamoClient';
 import { PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { ProjectContext } from '../schema/context';
 

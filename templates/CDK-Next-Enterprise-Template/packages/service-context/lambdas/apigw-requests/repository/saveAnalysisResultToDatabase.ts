@@ -1,4 +1,4 @@
-import { dynamoDb } from '../../../../../common-utils/dynamoClient';
+import { dynamoDb } from '../../../../common-utils/dynamoClient';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
 export const saveAnalysisResultToDatabase = async ({

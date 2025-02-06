@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { dynamoDb } from '../../../../../common-utils/dynamoClient';
+import { dynamoDb } from '../../../../common-utils/dynamoClient';
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 
 export const getAggregatedResultsHandler: APIGatewayProxyHandler = async (
