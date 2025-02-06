@@ -1,0 +1,63 @@
+# File location recommendation:
+#   <repo-root>/.github/workflows/cdk-next-enterprise-ci.yml
+# If you truly want it in templates/CDK-Next-Enterprise-Template/.github/ci.yml,
+# you'll have to do some custom steps so GitHub Actions picks it up.
+
+name: CI/CD Pipeline for CDK Next Enterprise Template
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+
+  pull_request:
+    branches: [ "dev", "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        # Use `npm ci` for a clean install
+        run: npm ci
+        working-directory: templates/CDK-Next-Enterprise-Template
+
+      - name: Run tests
+        run: npm test
+        working-directory: templates/CDK-Next-Enterprise-Template
+
+      - name: Build
+        run: npm run build
+        working-directory: templates/CDK-Next-Enterprise-Template
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    # Only run if on dev branch
+    if: github.ref == 'refs/heads/dev'
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: templates/CDK-Next-Enterprise-Template
+
+      - name: Deploy to Dev Environment
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: npx cdk deploy --require-approval never
+        working-directory: templates/CDK-Next-Enterprise-Template
