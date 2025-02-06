@@ -7,10 +7,10 @@ name: CI/CD Pipeline for CDK Next Enterprise Template
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "develop", "main" ]
 
   pull_request:
-    branches: [ "dev", "main" ]
+    branches: [ "develop", "main" ]
 
 jobs:
   build-and-test:
