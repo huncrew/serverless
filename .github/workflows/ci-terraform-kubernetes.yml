@@ -2,9 +2,9 @@ name: CI/CD Pipeline for ECS Fargate
 
 on:
   push:
-    branches: [ "develop", "main", "dev" ]
+    branches: [ "develop", "main" ]
   pull_request:
-    branches: [ "develop", "main", "dev" ]
+    branches: [ "develop", "main" ]
 
 jobs:
   build-and-test:
@@ -20,21 +20,43 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: services/products
+        working-directory: templates/Terraform-Kubernetes/services/products
 
       - name: Run tests
         run: npm test
-        working-directory: services/products
+        working-directory: templates/Terraform-Kubernetes/services/products
 
       - name: Build (local artifacts)
         run: npm run build
-        working-directory: services/products
+        working-directory: templates/Terraform-Kubernetes/services/products
+
+
+  infra:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::992382555562:role/githubAccess
+          aws-region: us-east-1
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: templates/Terraform-Kubernetes/terraform
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: templates/Terraform-Kubernetes/terraform
 
   deploy-dev:
     runs-on: ubuntu-latest
     needs: build-and-test
     # Only run this job if on 'dev' branch
-    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/develop'
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
@@ -46,7 +68,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: services/products
+        working-directory: templates/Terraform-Kubernetes/services/products
 
       # 1) Configure AWS credentials so we can push to ECR & update ECS
       - name: Configure AWS Credentials (OIDC)
@@ -65,8 +87,8 @@ jobs:
         run: |
           docker build \
             -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/products:latest \
-            -f services/products/Dockerfile \
-            services/products
+            -f templates/Terraform-Kubernetes/services/products/Dockerfile \
+            templates/Terraform-Kubernetes/services/products
 
       # 4) Push Docker image to ECR
       - name: Push Docker Image
