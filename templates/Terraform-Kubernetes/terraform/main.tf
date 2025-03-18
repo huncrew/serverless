@@ -17,6 +17,18 @@ variable "cluster_name" {
 }
 
 ###################################
+# Terraform Backend
+###################################
+
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state-bucket-dalegrant"
+    key            = "myproject/prod/terraform.tfstate"
+    region         = "us-east-1"
+  }
+}
+
+###################################
 # VPC (same as before)
 ###################################
 resource "aws_vpc" "this" {
