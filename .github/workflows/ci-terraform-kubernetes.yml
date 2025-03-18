@@ -95,14 +95,14 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build \
-            -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/products:latest \
+            -t 992382555562.dkr.ecr.us-east-1.amazonaws.com/products:latest \
             -f templates/Terraform-Kubernetes/services/products/Dockerfile \
             templates/Terraform-Kubernetes/services/products
 
       # 4) Push Docker image to ECR
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/products:latest
+          docker push 992382555562.dkr.ecr.us-east-1.amazonaws.com/products:latest
 
       # 5) Update ECS Fargate service to use new image
       - name: Force new deployment
