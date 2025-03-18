@@ -90,6 +90,19 @@ resource "aws_route_table_association" "private_rt_assoc_1" {
   route_table_id = aws_route_table.private_rt.id
 }
 
+
+###################################
+# ECR Repositories
+###################################
+resource "aws_ecr_repository" "products" {
+  name                 = "products"
+  image_tag_mutability = "MUTABLE"   # or IMMUTABLE
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+
 ###################################
 # ECS Cluster
 ###################################
