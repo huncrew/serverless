@@ -105,6 +105,72 @@ resource "aws_ecr_repository" "products" {
 ###################################
 # ALB (ECS/Fargate containers)
 ###################################
+resource "aws_lb" "this" {
+    name = "my-app-alb"
+    load_balancer_type = "application"
+    subnets = [
+        aws_subnet.public_1.id,
+        aws_subnet.public_2.id
+    ]
+    security_groups = [aws_security_group.alb_sg.id]
+}
+
+###################################
+# ALB Target Groups / Listeners (ECS/Fargate containers)
+###################################
+resource "aws_lb_target_group" "this" {
+  name        = "my-app-tg"
+  port        = 3000
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.this.id
+  target_type = "ip"  # for Fargate
+  health_check {
+    path = "/health"  # or wherever your app responds
+  }
+}
+
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.this.arn
+  }
+}
+
+
+
+###################################
+# Security Group for ALB (ECS/Fargate containers)
+###################################
+resource "aws_security_group" "alb_sg" {
+    name = "alb-sg"
+    vpc_id = aws_vpc.this.id
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  # If HTTPS:
+  # ingress {
+  #   from_port = 443
+  #   to_port   = 443
+  #   protocol  = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 
 
 ###################################
@@ -203,18 +269,19 @@ resource "aws_ecs_service" "this" {
   network_configuration {
     subnets          = [aws_subnet.private_1.id, aws_subnet.public_1.id]
     security_groups  = [aws_security_group.fargate_sg.id]
-    assign_public_ip = true  # Set to false if you want only private
+    assign_public_ip = false
   }
 
-  # If you want to attach an ALB for HTTP traffic, you'd define a load_balancer block here.
-  # For example:
-  # load_balancer {
-  #   target_group_arn = aws_lb_target_group.this.arn
-  #   container_name   = "my-products"
-  #   container_port   = 3000
-  # }
-  #
-  # depends_on = [aws_lb_listener.http]
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.this.arn
+    container_name   = "my-products" # must match your container definition name
+    container_port   = 3000          # must match your container's port
+  }
+
+  depends_on = [
+    aws_lb_listener.http
+  ]
 
   deployment_minimum_healthy_percent = 50
   deployment_maximum_percent         = 200
