@@ -102,6 +102,10 @@ resource "aws_ecr_repository" "products" {
   }
 }
 
+###################################
+# ALB (ECS/Fargate containers)
+###################################
+
 
 ###################################
 # ECS Cluster
