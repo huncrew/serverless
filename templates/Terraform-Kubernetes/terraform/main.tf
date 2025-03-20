@@ -42,6 +42,13 @@ resource "aws_subnet" "public_1" {
   map_public_ip_on_launch = true
 }
 
+resource "aws_subnet" "public_2" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block             = "10.0.3.0/24"
+  availability_zone       = "us-east-1c"
+  map_public_ip_on_launch = true
+}
+
 resource "aws_subnet" "private_1" {
   vpc_id                  = aws_vpc.this.id
   cidr_block             = "10.0.2.0/24"
@@ -109,7 +116,8 @@ resource "aws_lb" "this" {
     name = "my-app-alb"
     load_balancer_type = "application"
     subnets = [
-        aws_subnet.public_1.id
+        aws_subnet.public_1.id,
+        aws_subnet.public_2.id
     ]
     security_groups = [aws_security_group.alb_sg.id]
 }
