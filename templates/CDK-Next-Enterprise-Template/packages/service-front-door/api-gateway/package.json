@@ -1,5 +1,5 @@
 {
-  "name": "template-api-gateway",
+  "name": "template-front-door-api-gateway",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
