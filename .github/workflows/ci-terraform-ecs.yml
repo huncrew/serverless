@@ -20,15 +20,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: templates/Terraform-Kubernetes/services/products
+        working-directory: templates/Terraform-ECS/services/products
 
       - name: Run tests
         run: npm test
-        working-directory: templates/Terraform-Kubernetes/services/products
+        working-directory: templates/Terraform-ECS/services/products
 
       - name: Build (local artifacts)
         run: npm run build
-        working-directory: templates/Terraform-Kubernetes/services/products
+        working-directory: templates/Terraform-ECS/services/products
 
 
   infra:
@@ -52,11 +52,11 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: templates/Terraform-Kubernetes/terraform
+        working-directory: templates/Terraform-ECS/terraform
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: templates/Terraform-Kubernetes/terraform
+        working-directory: templates/Terraform-ECS/terraform
 
   deploy-dev:
     runs-on: ubuntu-latest
@@ -77,7 +77,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: templates/Terraform-Kubernetes/services/products
+        working-directory: templates/Terraform-ECS/services/products
 
       # 1) Configure AWS credentials so we can push to ECR & update ECS
       - name: Configure AWS Credentials (OIDC)
@@ -96,8 +96,8 @@ jobs:
         run: |
           docker build \
             -t 992382555562.dkr.ecr.us-east-1.amazonaws.com/products:latest \
-            -f templates/Terraform-Kubernetes/services/products/Dockerfile \
-            templates/Terraform-Kubernetes/services/products
+            -f templates/Terraform-ECS/services/products/Dockerfile \
+            templates/Terraform-ECS/services/products
 
       # 4) Push Docker image to ECR
       - name: Push Docker Image

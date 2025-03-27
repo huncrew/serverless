@@ -250,7 +250,7 @@ resource "aws_ecs_task_definition" "this" {
 [
   {
     "name": "my-products",
-    "image": "YOUR_ECR_REPO_URI:latest", 
+    "image": "products:latest", 
     "essential": true,
     "portMappings": [
       {
