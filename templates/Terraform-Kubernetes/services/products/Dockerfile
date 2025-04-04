@@ -1,8 +1,16 @@
 # services/products/Dockerfile
+
+# Build Stage
 FROM node:18-alpine
 WORKDIR /app
 COPY package*.json .
 RUN npm install
 COPY . .
+RUN npm run build
+
+# Final Stage
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/dist
 EXPOSE 3000
-CMD ["npm", "run", "start"]  # or "dev" if you want development mode
+CMD ["npm", "run", "start"]
