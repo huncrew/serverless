@@ -109,6 +109,61 @@ resource "aws_ecr_repository" "products" {
   }
 }
 
+
+
+###################################
+# ECR Security Alerts (EventBridge / SNS)
+###################################
+
+# SNS Topic for ECR Alerts
+resource "aws_sns_topic" "ecr_alerts" {
+  name = "ecr-vulnerability-alerts"
+}
+
+# Optional: Email subscription (replace with your email)
+resource "aws_sns_topic_subscription" "email_alert" {
+  topic_arn = aws_sns_topic.ecr_alerts.arn
+  protocol  = "email"
+  endpoint  = "mrdalegrant@gmail.com"
+}
+
+# EventBridge Rule: listens for scan results
+resource "aws_cloudwatch_event_rule" "ecr_scan_findings" {
+  name        = "ecr-scan-results"
+  description = "Trigger alert on ECR scan findings"
+  event_pattern = jsonencode({
+    "source": ["aws.ecr"],
+    "detail-type": ["ECR Image Scan"]
+  })
+}
+
+# Attach rule to SNS topic
+resource "aws_cloudwatch_event_target" "send_to_sns" {
+  rule      = aws_cloudwatch_event_rule.ecr_scan_findings.name
+  target_id = "SendToSNS"
+  arn       = aws_sns_topic.ecr_alerts.arn
+}
+
+# Allow EventBridge to publish to SNS
+resource "aws_sns_topic_policy" "ecr_sns_policy" {
+  arn = aws_sns_topic.ecr_alerts.arn
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "events.amazonaws.com"
+        },
+        Action = "sns:Publish",
+        Resource = aws_sns_topic.ecr_alerts.arn
+      }
+    ]
+  })
+}
+
+
 ###################################
 # ALB (ECS/Fargate containers)
 ###################################
